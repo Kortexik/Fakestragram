@@ -17,7 +17,7 @@ ENV GOARCH=arm64
 
 # Build the Go application
 RUN go build -o main .
-
+RUN chmod +x main
 RUN /go/bin/goose -dir migrations sqlite3 /app/database/data.db up
 
 EXPOSE 8080
