@@ -18,12 +18,16 @@ COPY . .
 # Ensure the database file is included in the container
 COPY ./database/data.db /app/database/data.db
 
-# Expose the application port
 EXPOSE 8080
+
 # Run database migrations
 RUN /go/bin/goose -dir migrations sqlite3 /app/database/data.db up
-# Build the Go application
-RUN GOOS=linux GOARCH=amd64 go build -o backend
+
+# Ensure correct compilation for Linux amd64
+RUN go build -o /app/backend .
+
+# Ensure the binary is executable
 RUN chmod +x /app/backend
 
+# Run the backend application
 CMD ["/app/backend"]
