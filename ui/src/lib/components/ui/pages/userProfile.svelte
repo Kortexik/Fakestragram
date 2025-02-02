@@ -53,7 +53,7 @@ function handleFileInputChange(event) {
   
 const fetchUserProfile = async (username) => {
     try {
-        const response = await axios.get(`http://localhost:8080/users/getuserprofile/${username}`);
+        const response = await axios.get(`http://4.234.181.167:8080/users/getuserprofile/${username}`);
         const { user, userPosts, numberOfFollowers, numberOfFollowees } = response.data;
         profile = {
             userID: user.id,
@@ -77,7 +77,7 @@ const fetchUserProfile = async (username) => {
 const fetchFollowStatus = async (CurrentUserId, followeeId) => {
       try {
         
-        const response = await fetch(`http://localhost:8080/protected/isFollowing`, {
+        const response = await fetch(`http://4.234.181.167:8080/protected/isFollowing`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -110,7 +110,7 @@ const fetchFollowStatus = async (CurrentUserId, followeeId) => {
     const followUser = async (followerId: number, followeeId: number) => {
       try {
         const payload = { followerId, followeeId };
-        const response = await fetch("http://localhost:8080/protected/follow", {
+        const response = await fetch("http://4.234.181.167:8080/protected/follow", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -133,7 +133,7 @@ const fetchFollowStatus = async (CurrentUserId, followeeId) => {
   
     const unfollowUser = async (followerId: number, followeeId: number) => {
       try {
-        const response = await fetch("http://localhost:8080/protected/unfollow", {
+        const response = await fetch("http://4.234.181.167:8080/protected/unfollow", {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

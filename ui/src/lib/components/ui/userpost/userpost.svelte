@@ -20,7 +20,7 @@
     
     const fetchPostData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/posts/${postId}`, {
+        const response = await fetch(`http://4.234.181.167:8080/posts/${postId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -54,7 +54,7 @@
     const likePost = async () => {
       try {
         const payload = { userID: CurrentUserId, postId };
-        const response = await fetch("http://localhost:8080/protected/like", {
+        const response = await fetch("http://4.234.181.167:8080/protected/like", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -77,7 +77,7 @@
   
     const unlikePost = async () => {
       try {
-            const response = await fetch(`http://localhost:8080/protected/like/${postId}`, {
+            const response = await fetch(`http://4.234.181.167:8080/protected/like/${postId}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -108,7 +108,7 @@
     const postComment = async () => {
       try {
         const payload = { userID: CurrentUserId, postId, commentContent };
-        const response = await fetch("http://localhost:8080/protected/comment", {
+        const response = await fetch("http://4.234.181.167:8080/protected/comment", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -134,7 +134,7 @@
   
     const deleteComment = async (commentID: string) => {
       try {
-        const response = await fetch(`http://localhost:8080/protected/comment/${commentID}`, {
+        const response = await fetch(`http://4.234.181.167:8080/protected/comment/${commentID}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -166,7 +166,7 @@
     const followUser = async (followerId: number, followeeId: number) => {
       try {
         const payload = { followerId, followeeId };
-        const response = await fetch("http://localhost:8080/protected/follow", {
+        const response = await fetch("http://4.234.181.167:8080/protected/follow", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -189,7 +189,7 @@
   
     const unfollowUser = async (followerId: number, followeeId: number) => {
       try {
-        const response = await fetch("http://localhost:8080/protected/unfollow", {
+        const response = await fetch("http://4.234.181.167:8080/protected/unfollow", {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -213,7 +213,7 @@
     const fetchFollowStatus = async () => {
       try {
         
-        const response = await fetch(`http://localhost:8080/protected/isFollowing`, {
+        const response = await fetch(`http://4.234.181.167:8080/protected/isFollowing`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -237,7 +237,7 @@
   
     const fetchUsername = async (user_id: number): Promise<string> => {
       try {
-        const response = await axios.get(`http://localhost:8080/users/username/${user_id}`);
+        const response = await axios.get(`http://4.234.181.167:8080/users/username/${user_id}`);
         const username = response.data.data;
         return username;
       } catch (error) {

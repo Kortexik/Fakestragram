@@ -64,7 +64,7 @@ const handleSubmit = async (e) => {
 
         const token = localStorage.getItem("token");
 
-        const response = await axios.post("http://localhost:8080/protected/upload", formData, {
+        const response = await axios.post("http://4.234.181.167:8080/protected/upload", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
                 "Authorization": `Bearer ${token}`

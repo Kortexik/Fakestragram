@@ -1,4 +1,4 @@
-package main
+package mainshadc
 
 import (
 	"backend/src/handlers"

@@ -13,7 +13,7 @@
 
   const checkUsernameExists = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/auth/check-username", {
+    const response = await axios.get("http://4.234.181.167:8080/auth/check-username", {
       params: { username },
     });
     setUsernameExists(response.data.exists)
@@ -24,7 +24,7 @@
 
 const checkEmailExists = async () => {
   try {
-    const response = await axios.get("http://localhost:8080/auth/check-email", {
+    const response = await axios.get("http://4.234.181.167:8080/auth/check-email", {
       params: { email },
     });
     setEmailExists(response.data.exists);
@@ -40,7 +40,7 @@ const checkEmailExists = async () => {
 
   const Register = async (username, password, firstName, lastName, email) => {
   try {
-    const response = await axios.post("http://localhost:8080/auth/register", {
+    const response = await axios.post("http://4.234.181.167:8080/auth/register", {
       username,
       password,
       firstName,

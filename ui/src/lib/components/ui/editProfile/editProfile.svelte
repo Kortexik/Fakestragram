@@ -35,7 +35,7 @@
 
             const token = localStorage.getItem("token");
             const response = await axios.put(
-                "http://localhost:8080/protected/update-profile",
+                "http://4.234.181.167:8080/protected/update-profile",
                 formData,
                 {
                     headers: {

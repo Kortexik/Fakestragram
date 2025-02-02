@@ -41,7 +41,7 @@
   // Fetch posts
   const fetchPosts = async () => {
     try {
-      const response = await axios.get<{ Posts: Post[] }>("http://localhost:8080/posts");
+      const response = await axios.get<{ Posts: Post[] }>("http://4.234.181.167:8080/posts");
       posts = response.data.Posts.map(post => ({
         ...post,
         media: post.media.startsWith("data:image/")
@@ -61,7 +61,7 @@
     }
 
     try {
-      const response = await axios.get(`http://localhost:8080/users/username/${user_id}`);
+      const response = await axios.get(`http://4.234.181.167:8080/users/username/${user_id}`);
       const username = response.data.data;
       usernameCache.set(user_id, username); // Cache the username
       return username;
