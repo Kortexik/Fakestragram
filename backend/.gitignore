@@ -1,2 +1,3 @@
-database
+/database
+!/src/database
 backend.exe
