@@ -12,6 +12,11 @@ COPY ./index.html ./
 COPY ./svelte.config.js ./
 COPY ./vite.config.ts ./
 COPY ./tsconfig*.json ./
+COPY ./components.json ./
+COPY ./postcss.config.js ./
+COPY ./tailwind.config.ts ./
+COPY ./package-lock.json ./
+COPY ./package.json ./
 
 RUN npm run build
 

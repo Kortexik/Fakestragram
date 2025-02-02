@@ -2,6 +2,8 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
 	"strconv"
 	"time"
 )
@@ -14,30 +16,74 @@ type Comment struct {
 	CreatedAt time.Time `gorm:"autoCreateTime" json:"created_at"`
 }
 
-func AddComment(newComment Comment, DB *sql.DB) (bool, error) {
-
+func AddComment(newComment Comment, DB *sql.DB) (*Comment, error) {
 	tx, err := DB.Begin()
 	if err != nil {
-		return false, err
+		log.Println("Error starting transaction:", err)
+		return nil, err
 	}
 
 	stmt, err := tx.Prepare("INSERT INTO comments (user_id, post_id, content) VALUES (?, ?, ?)")
-
 	if err != nil {
-		return false, err
+		log.Println("Error preparing statement:", err)
+		tx.Rollback()
+		return nil, err
 	}
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(newComment.UserID, newComment.PostID, newComment.Content)
-
+	result, err := stmt.Exec(newComment.UserID, newComment.PostID, newComment.Content)
 	if err != nil {
-		return false, err
+		tx.Rollback()
+		return nil, err
 	}
 
-	tx.Commit()
+	post, err := GetUserPostById(strconv.Itoa(newComment.PostID), DB)
+	if err != nil {
+		log.Println("Error getting userpost: ", err)
+		return nil, err
+	}
 
-	return true, nil
+	relatedUserUsername, err := GetUsernameById(newComment.UserID, DB)
+	if err != nil {
+		log.Println("Error getting username: ", err)
+		return nil, err
+	}
+
+	if newComment.UserID != post.UserID {
+		newNotification := Notification{
+			UserID:        post.UserID,
+			Type:          "Like",
+			RelatedUserID: newComment.UserID,
+			PostID:        newComment.PostID,
+			Content:       fmt.Sprintf("%s has commented on post.", relatedUserUsername),
+		}
+
+		created, err := AddNotification(newNotification, tx)
+		if err != nil || !created {
+			log.Println("Error adding notification:", err)
+			tx.Rollback()
+			return nil, err
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		log.Println("Error committing transaction:", err)
+		return nil, err
+	}
+
+	lastInsertID, err := result.LastInsertId()
+	if err != nil {
+		return nil, err
+	}
+
+	var createdComment Comment
+	row := DB.QueryRow("SELECT id, user_id, post_id, content, created_at FROM comments WHERE id = ?", lastInsertID)
+	if err := row.Scan(&createdComment.ID, &createdComment.UserID, &createdComment.PostID, &createdComment.Content, &createdComment.CreatedAt); err != nil {
+		return nil, err
+	}
+
+	return &createdComment, nil
 }
 
 func DeleteComment(id string, DB *sql.DB) (bool, error) {
@@ -117,6 +163,7 @@ func GetCommentsByPost(post_id string, DB *sql.DB) ([]Comment, error) {
 
 		comments = append(comments, singleComment)
 	}
+	fmt.Println(comments)
 
 	err = rows.Err()
 

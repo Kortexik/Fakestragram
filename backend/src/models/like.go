@@ -2,6 +2,8 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
+	"log"
 	"strconv"
 	"time"
 )
@@ -14,15 +16,17 @@ type Like struct {
 }
 
 func AddLike(newLike Like, DB *sql.DB) (bool, error) {
-
 	tx, err := DB.Begin()
 	if err != nil {
+		log.Println("Error starting transaction:", err)
 		return false, err
 	}
 
 	stmt, err := tx.Prepare("INSERT INTO likes (user_id, post_id) VALUES (?, ?)")
 
 	if err != nil {
+		log.Println("Error preparing statement:", err)
+		tx.Rollback()
 		return false, err
 	}
 
@@ -31,28 +35,61 @@ func AddLike(newLike Like, DB *sql.DB) (bool, error) {
 	_, err = stmt.Exec(newLike.UserID, newLike.PostID)
 
 	if err != nil {
+		log.Println("Error inserting like:", err)
 		return false, err
 	}
 
-	tx.Commit()
+	post, err := GetUserPostById(strconv.Itoa(newLike.PostID), DB)
+	if err != nil {
+		log.Println("Error getting userpost: ", err)
+		return false, err
+	}
+
+	relatedUserUsername, err := GetUsernameById(newLike.UserID, DB)
+	if err != nil {
+		log.Println("Error getting username: ", err)
+		return false, err
+	}
+
+	if newLike.UserID != post.UserID {
+		newNotification := Notification{
+			UserID:        post.UserID,
+			Type:          "Like",
+			RelatedUserID: newLike.UserID,
+			PostID:        newLike.PostID,
+			Content:       fmt.Sprintf("%s has liked your post.", relatedUserUsername),
+		}
+
+		created, err := AddNotification(newNotification, tx)
+		if err != nil || !created {
+			log.Println("Error adding notification:", err)
+			tx.Rollback()
+			return false, err
+		}
+	}
+
+	if err := tx.Commit(); err != nil {
+		log.Println("Error committing transaction:", err)
+		return false, err
+	}
 
 	return true, nil
 }
 
-func DeleteLike(id string, DB *sql.DB) (bool, error) {
+func DeleteLike(user_id int, post_id int, DB *sql.DB) (bool, error) {
 	tx, err := DB.Begin()
 	if err != nil {
 		return false, err
 	}
 
-	stmt, err := DB.Prepare("DELETE FROM likes WHERE id = ?")
+	stmt, err := DB.Prepare("DELETE FROM likes WHERE user_id = ? AND post_id = ?")
 	if err != nil {
 		return false, err
 	}
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(id)
+	_, err = stmt.Exec(user_id, post_id)
 	if err != nil {
 		return false, err
 	}

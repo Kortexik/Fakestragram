@@ -56,15 +56,18 @@ const handleSubmit = async (e) => {
     }
   };
 
-const Upload = async (file: File, caption: string) => {
+  const Upload = async (file: File, caption: string) => {
     try {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("caption", caption);
 
-        const response = await axios.post("http://localhost:8080/posts/upload", formData, {
+        const token = localStorage.getItem("token");
+
+        const response = await axios.post("http://localhost:8080/protected/upload", formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
+                "Authorization": `Bearer ${token}`
             },
         });
 
@@ -73,6 +76,7 @@ const Upload = async (file: File, caption: string) => {
         console.error("Error uploading post:", error);
     }
 };
+
   
 </script>
 
@@ -83,7 +87,7 @@ const Upload = async (file: File, caption: string) => {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 30%;
-    height: 50%;
+    height: 60%;
     z-index: 1000;
     background-color: #ededed;
     padding: 20px;
