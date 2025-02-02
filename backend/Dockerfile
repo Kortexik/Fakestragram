@@ -24,7 +24,7 @@ EXPOSE 8080
 RUN /go/bin/goose -dir migrations sqlite3 /app/database/data.db up
 
 # Ensure correct compilation for Linux amd64
-RUN go build -o /app/backend .
+RUN GOOS=linux GOARCH=amd64 go build -o /app/backend .
 
 # Ensure the binary is executable
 RUN chmod +x /app/backend
