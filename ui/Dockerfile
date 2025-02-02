@@ -17,6 +17,7 @@ COPY ./postcss.config.js ./
 COPY ./tailwind.config.ts ./
 COPY ./package-lock.json ./
 COPY ./package.json ./
+COPY ./nginx.conf ./
 
 RUN npm run build
 
