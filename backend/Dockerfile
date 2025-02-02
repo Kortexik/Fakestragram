@@ -12,9 +12,6 @@ COPY . .
 
 COPY ./database/data.db /app/database/data.db
 
-# Set the target architecture to arm64
-ENV GOARCH=arm64
-
 # Build the Go application
 RUN go build -o main .
 RUN chmod +x main
