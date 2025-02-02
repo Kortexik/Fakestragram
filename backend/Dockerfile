@@ -12,9 +12,13 @@ COPY . .
 
 COPY ./database/data.db /app/database/data.db
 
-RUN /go/bin/goose -dir migrations sqlite3 /app/database/data.db up
+# Set the target architecture to arm64
+ENV GOARCH=arm64
 
-RUN chmod +x /app/main
+# Build the Go application
+RUN go build -o main .
+
+RUN /go/bin/goose -dir migrations sqlite3 /app/database/data.db up
 
 EXPOSE 8080
 
