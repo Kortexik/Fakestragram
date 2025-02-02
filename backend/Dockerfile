@@ -1,8 +1,9 @@
 # Use the official Golang image
 FROM golang:1.23.2
 
-# Install SQLite
-RUN apt-get update && apt-get install -y sqlite3
+# Install SQLite and goose
+RUN apt-get update && apt-get install -y sqlite3 \
+    && go install github.com/pressly/goose/v3/cmd/goose@latest
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -17,9 +18,10 @@ COPY . .
 # Ensure the database file is included in the container
 COPY ./database/data.db /app/database/data.db
 
+# Run database migrations
+RUN /go/bin/goose -dir migrations sqlite3 /app/database/data.db up
 # Build the Go application
 RUN GOOS=linux GOARCH=amd64 go build -o backend
-
 
 # Expose the application port
 EXPOSE 8080
