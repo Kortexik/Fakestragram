@@ -3,13 +3,11 @@
   import { Button } from "$lib/components/ui/button";
   import Textarea from "../textarea/textarea.svelte";
   import axios from "axios";
-  import { createEventDispatcher } from 'svelte';
 
   let popup;
   let selectedFile;
   let caption = "";
   let loading = false;
-  const dispatch = createEventDispatcher();
 
   function handleBackdropClick(event: MouseEvent) {
     if (!popup.contains(event.target)) {
@@ -55,7 +53,6 @@
       await Upload(selectedFile, caption);
       loading = false;
       showPopup.set(false);
-      dispatch('postUploaded'); // Dispatch custom event
     } else {
       alert("Please select a file and provide a caption.");
     }
@@ -84,8 +81,74 @@
 </script>
 
 <style>
-  /* existing styles */
+  #PopupUpload {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30%;
+    height: 60%;
+    z-index: 1000;
+    background-color: #ededed;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #Backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  #file-input {
+    display: none;
+  }
+
+  #post-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }
+
+  .spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  span {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 1.3em;
+  }
 </style>
+
+<link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 
 <div id="Backdrop"
      on:click={handleBackdropClick}
