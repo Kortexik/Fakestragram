@@ -158,9 +158,16 @@
   #userPosts {
     margin-top:10px;
   }
-  #username {
-    font-weight: bold;
-  }
+  .notifications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+#username {
+  font-weight: bold;
+}
 
 </style>
 
@@ -179,7 +186,13 @@
 {/if}
 
 <div id="notifications">
-  <h3>Notifications  <Link to={`/${$currentUsername}`}><span id="username">{$currentUsername}</span></Link></h3>
+  <h3>
+    <div class="notifications-header">
+      <span>Notifications</span>
+      <Link to={`/${$currentUsername}`}><span id="username">{$currentUsername}</span></Link>
+    </div>
+  </h3>
+  
   <ul>
     {#each $notifications as notification}
       <li>
