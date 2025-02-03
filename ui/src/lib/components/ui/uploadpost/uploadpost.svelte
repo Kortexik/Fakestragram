@@ -3,11 +3,13 @@
   import { Button } from "$lib/components/ui/button";
   import Textarea from "../textarea/textarea.svelte";
   import axios from "axios";
+  import { createEventDispatcher } from 'svelte';
 
   let popup;
   let selectedFile;
   let caption = "";
   let loading = false;
+  const dispatch = createEventDispatcher();
 
   function handleBackdropClick(event: MouseEvent) {
     if (!popup.contains(event.target)) {
@@ -53,6 +55,7 @@
       await Upload(selectedFile, caption);
       loading = false;
       showPopup.set(false);
+      dispatch('postUploaded');
     } else {
       alert("Please select a file and provide a caption.");
     }

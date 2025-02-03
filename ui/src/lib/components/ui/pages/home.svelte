@@ -105,6 +105,10 @@
     await fetchNotifications();
     await markNotificationsAsSeen();
   });
+
+  function handlePostUploaded() {
+    fetchPosts();
+  }
 </script>
 
 <style>
@@ -168,7 +172,7 @@
 </div>
 
 {#if $showPopup}
-  <UploadPost />
+  <UploadPost on:postUploaded={handlePostUploaded}/>
 {/if}
 
 <div id="notifications">
