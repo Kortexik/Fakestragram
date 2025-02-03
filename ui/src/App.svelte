@@ -4,7 +4,7 @@
   import Login from "$lib/components/ui/pages/login.svelte";
   import Register from "$lib/components/ui/pages/register.svelte";
   import UserProfile from "$lib/components/ui/pages/userProfile.svelte";
-  import { isAuthenticated, checkAuthentication } from "./store";
+  import { isAuthenticated, checkAuthentication } from "$lib/../store";;
   import { fetchCurrentUser } from "$lib/components/ui/pages/userstore";
   import { onMount } from "svelte";
 

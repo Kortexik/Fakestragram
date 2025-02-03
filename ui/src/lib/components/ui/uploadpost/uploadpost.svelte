@@ -6,7 +6,8 @@
 
   let popup;
   let selectedFile;
-  let caption="";
+  let caption = "";
+  let loading = false;
 
   function handleBackdropClick(event: MouseEvent) {
     if (!popup.contains(event.target)) {
@@ -30,26 +31,27 @@
       fileSelected = true;
       updateCheckboxDisplay();
     }
-      
   }
 
-function updateCheckboxDisplay() {
-  const checkboxContainer = document.getElementById("file-checkbox");
-  if (fileSelected) {
-    checkboxContainer.innerHTML = `
-      <label>
-        <input type="checkbox" id="file-inserted" checked disabled />
-        File successfully inserted.
-      </label>`;
-  } else {
-    checkboxContainer.innerHTML = "";
+  function updateCheckboxDisplay() {
+    const checkboxContainer = document.getElementById("file-checkbox");
+    if (fileSelected) {
+      checkboxContainer.innerHTML = `
+        <label>
+          <input type="checkbox" id="file-inserted" checked disabled />
+          File successfully inserted.
+        </label>`;
+    } else {
+      checkboxContainer.innerHTML = "";
+    }
   }
-}
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (selectedFile && caption) {
+      loading = true;
       await Upload(selectedFile, caption);
+      loading = false;
       showPopup.set(false);
     } else {
       alert("Please select a file and provide a caption.");
@@ -58,26 +60,24 @@ const handleSubmit = async (e) => {
 
   const Upload = async (file: File, caption: string) => {
     try {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("caption", caption);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("caption", caption);
 
-        const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-        const response = await axios.post("http://4.234.181.167:8080/protected/upload", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                "Authorization": `Bearer ${token}`
-            },
-        });
+      const response = await axios.post("http://4.234.181.167:8080/protected/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`
+        },
+      });
 
-        console.log("Post uploaded successfully:", response.data);
+      console.log("Post uploaded successfully:", response.data);
     } catch (error) {
-        console.error("Error uploading post:", error);
+      console.error("Error uploading post:", error);
     }
-};
-
-  
+  };
 </script>
 
 <style>
@@ -99,7 +99,6 @@ const handleSubmit = async (e) => {
     align-items: center;
   }
 
-
   #Backdrop {
     position: fixed;
     top: 0;
@@ -111,7 +110,7 @@ const handleSubmit = async (e) => {
   }
 
   #file-input {
-    display:none
+    display: none;
   }
 
   #post-form {
@@ -119,12 +118,32 @@ const handleSubmit = async (e) => {
     flex-direction: column;
     align-items: center;
     width: 100%;
-}
+  }
 
+  .loading-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+  }
 
+  .spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
 
   span {
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 1.3em;
   }
 </style>
@@ -142,6 +161,11 @@ const handleSubmit = async (e) => {
 </div>
 
 <div id="PopupUpload" bind:this={popup}>
+  {#if loading}
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+    </div>
+  {:else}
     <i class="fi fi-rr-cloud-upload-alt" style="transform: scale(6); margin: 30px;"></i>
     <form id="post-form" on:submit={handleSubmit}>
       <span>Upload photos and videos</span>
@@ -152,11 +176,10 @@ const handleSubmit = async (e) => {
         accept="image/jpeg,image/png,image/heic,image/heif,video/mp4,video/quicktime"
         style="display: none;"
         on:change={handleFileInputChange}
-    />
+      />
       <div id="file-checkbox" style="margin-top: 10px;"></div>
-      <Textarea  id="caption"  style="margin: 10px;" rows={5} placeholder="Write a caption... " bind:value={caption} />
+      <Textarea id="caption" style="margin: 10px;" rows={5} placeholder="Write a caption... " bind:value={caption} />
       <Button type="submit" style="width: 10%;"><i class="fi fi-rr-arrow-right"></i></Button>
-   </form>
+    </form>
+  {/if}
 </div>
-
-

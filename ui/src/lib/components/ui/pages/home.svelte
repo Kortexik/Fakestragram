@@ -8,7 +8,7 @@
   import { onMount } from "svelte";
   import { currentUsername, currentUserId, fetchCurrentUser } from "./userstore";
   import { get } from "svelte/store";
-
+  import { Link } from 'svelte-routing';
 
   interface Likes {
     id: number;
@@ -55,7 +55,7 @@
   };
 
   // Fetch username by user_id and store in cache
-   const fetchUsername = async (user_id: number): Promise<string> => {
+  const fetchUsername = async (user_id: number): Promise<string> => {
     if (usernameCache.has(user_id)) {
       return usernameCache.get(user_id)!; // Return cached username
     }
@@ -141,12 +141,31 @@
     border-bottom: none;
   }
 
+  #fixedButtons {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center; 
+  }
+
+  #userPosts {
+    margin-top:10px;
+  }
+
 </style>
 
-<Button class="bg-[#f5f5f5] text-gray-800 hover:bg-[#e0e0e0] shadow-md text-[14px] mt-6 ml-7 scale-[1.2] font-bold rounded-md border-none  transition-colors duration-300 ease-in-out"
-  on:click={togglePopup}>Upload
+<div id="fixedButtons">
+  <Link to="/" class="mb-4 text-[20px] font-bold cursor-pointer">Fakestagram</Link>
+  <Button 
+  class="flex items-center justify-center px-5 py-2.5 bg-gray-100 text-gray-800 rounded-md shadow-md transition duration-300 ease-in-out hover:bg-gray-200 hover:text-black"
+  on:click={togglePopup}
+>
+  <span class="text-[16px] font-bold">Upload</span>
 </Button>
-
+</div>
 
 {#if $showPopup}
   <UploadPost />
@@ -166,6 +185,7 @@
 
 <LogoutButton />
 
+<div id="userPosts">
 {#each posts as post}
   {#await fetchUsername(post.user_id) then username}
     <UserPost
@@ -180,3 +200,4 @@
     />
   {/await}
 {/each}
+</div>

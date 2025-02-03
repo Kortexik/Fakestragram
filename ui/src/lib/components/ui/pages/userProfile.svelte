@@ -6,6 +6,8 @@
   import { editing, setEditing } from "$lib/../store"
   import EditProfile from "$lib/components/ui/editProfile/editProfile.svelte";
   import { get } from "svelte/store";
+  import { Link } from 'svelte-routing';
+  import LogoutButton from "$lib/components/ui/logoutButton/logoutButton.svelte";
 
   
   interface User {
@@ -295,7 +297,22 @@ const fetchFollowStatus = async (CurrentUserId, followeeId) => {
     margin-bottom: 0.5rem;
     font-weight: bold;
   }
+
+  #fixedButtons {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center; 
+  }
 </style>
+
+
+<div id="fixedButtons">
+  <Link to="/" class="mb-4 text-[20px] font-bold cursor-pointer">Fakestagram</Link>
+</div>
 
 {#if profile}
 <div id="profileBody">
@@ -356,12 +373,17 @@ const fetchFollowStatus = async (CurrentUserId, followeeId) => {
       {/if}
       <div id="userPostGrid">
         {#each posts as userPost}
-          <div id="postImageContainer">
-            <img onclick={toogleImageClicked} id="postImage" src={`data:image/png;base64,${userPost}`} alt="posts">
+          <div onclick={toogleImageClicked} role="button" tabindex="0" id="postImageContainer" onkeydown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+                toogleImageClicked();
+            }
+        }}>
+            <img id="postImage" src={`data:image/png;base64,${userPost}`} alt="posts">
           </div>
         {/each}
       </div> 
     </div>
   </div>
- 
 {/if}
+
+<LogoutButton />
