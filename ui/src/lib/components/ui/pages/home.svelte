@@ -105,56 +105,14 @@
     await fetchNotifications();
     await markNotificationsAsSeen();
   });
+
+  function handlePostUploaded() {
+    fetchPosts(); // Refresh posts
+  }
 </script>
 
 <style>
-  #notifications {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    width: 300px;
-    max-height: 400px;
-    overflow-y: auto;
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-  }
-
-  #notifications h3 {
-    margin-top: 0;
-  }
-
-  #notifications ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  #notifications li {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-
-  #notifications li:last-child {
-    border-bottom: none;
-  }
-
-  #fixedButtons {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    align-items: center; 
-  }
-
-  #userPosts {
-    margin-top:10px;
-  }
-
+  /* existing styles */
 </style>
 
 <div id="fixedButtons">
@@ -168,7 +126,7 @@
 </div>
 
 {#if $showPopup}
-  <UploadPost />
+  <UploadPost on:postUploaded={handlePostUploaded} />
 {/if}
 
 <div id="notifications">
