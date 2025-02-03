@@ -14,6 +14,7 @@ RUN go mod download
 # Copy the source code
 COPY ./src ./src
 COPY ./database/emptydb.db ./database/data.db
+COPY ./migrations ./migrations
 COPY ./main.go .
 
 # Build
