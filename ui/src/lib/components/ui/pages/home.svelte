@@ -179,7 +179,7 @@
 {/if}
 
 <div id="notifications">
-  <h3>Notifications  <Link to={`/${get(currentUsername)}`}><span id="username">{get(currentUsername)}</span></Link></h3>
+  <h3>Notifications  <Link to={`/${$currentUsername}`}><span id="username">{$currentUsername}</span></Link></h3>
   <ul>
     {#each $notifications as notification}
       <li>
