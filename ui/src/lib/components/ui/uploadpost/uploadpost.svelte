@@ -53,6 +53,7 @@
       await Upload(selectedFile, caption);
       loading = false;
       showPopup.set(false);
+      window.location.reload();
     } else {
       alert("Please select a file and provide a caption.");
     }
