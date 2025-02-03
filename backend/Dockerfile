@@ -1,5 +1,8 @@
 FROM golang:1.23.2
 
+
+RUN go install github.com/pressly/goose/v3/cmd/goose@latest
+
 # Set destination for COPY
 WORKDIR /app
 
@@ -7,12 +10,14 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download
 
+
 # Copy the source code
 COPY ./src ./src
-COPY ./database/data.db ./database/data.db
+COPY ./database/emptydb.db ./database/data.db
 COPY ./main.go .
 
 # Build
+RUN /go/bin/goose -dir migrations sqlite3 /app/database/data.db up
 RUN go build -o main .
 
 EXPOSE 8080
