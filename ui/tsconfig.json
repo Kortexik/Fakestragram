@@ -6,6 +6,12 @@
     "paths": {
       "$lib": ["./src/lib"],
       "$lib/*": ["./src/lib/*"]
-    }
-  }
+    },
+    "module": "commonjs",
+    "target": "es6",
+    "checkJs": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

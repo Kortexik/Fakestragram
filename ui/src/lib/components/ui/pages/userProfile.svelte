@@ -8,6 +8,7 @@
   import { get } from "svelte/store";
   import { Link } from 'svelte-routing';
   import LogoutButton from "$lib/components/ui/logoutButton/logoutButton.svelte";
+  import { API_URL } from "../../../../main";
 
   
   interface User {
@@ -55,7 +56,7 @@ function handleFileInputChange(event) {
   
 const fetchUserProfile = async (username) => {
     try {
-        const response = await axios.get(`http://4.234.181.167:8080/users/getuserprofile/${username}`);
+        const response = await axios.get(`${API_URL}/users/getuserprofile/${username}`);
         const { user, userPosts, numberOfFollowers, numberOfFollowees } = response.data;
         profile = {
             userID: user.id,
@@ -79,7 +80,7 @@ const fetchUserProfile = async (username) => {
 const fetchFollowStatus = async (CurrentUserId, followeeId) => {
       try {
         
-        const response = await fetch(`http://4.234.181.167:8080/protected/isFollowing`, {
+        const response = await fetch(`${API_URL}/protected/isFollowing`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -103,16 +104,16 @@ const fetchFollowStatus = async (CurrentUserId, followeeId) => {
 
     const toggleFollow = async () => {
       if (isFollowing) {
-        await unfollowUser(get(currentUserId), profile.userID);
+        await unfollowUser(Number(get(currentUserId)), profile.userID);
       } else {
-        await followUser(get(currentUserId), profile.userID);
+        await followUser(Number(get(currentUserId)), profile.userID);
       }
     };
   
     const followUser = async (followerId: number, followeeId: number) => {
       try {
         const payload = { followerId, followeeId };
-        const response = await fetch("http://4.234.181.167:8080/protected/follow", {
+        const response = await fetch(`${API_URL}/protected/follow`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -135,7 +136,7 @@ const fetchFollowStatus = async (CurrentUserId, followeeId) => {
   
     const unfollowUser = async (followerId: number, followeeId: number) => {
       try {
-        const response = await fetch("http://4.234.181.167:8080/protected/unfollow", {
+        const response = await fetch(`${API_URL}/protected/unfollow`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

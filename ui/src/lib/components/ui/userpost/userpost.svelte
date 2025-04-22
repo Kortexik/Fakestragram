@@ -4,6 +4,8 @@
     import { followState, setFollowState } from "./followStore";
     import { get } from "svelte/store";
     import { Link } from 'svelte-routing'; 
+    import { API_URL } from "../../../../main";
+    import { formatRelativeTime } from './time';
 
     let props = $props();
     let isLiked = $state();
@@ -16,11 +18,10 @@
     let commentContent = $state("");
     let loading = $state(true);
     const CurrentUserId = props["CurrentUserId"];
-
     
     const fetchPostData = async () => {
       try {
-        const response = await fetch(`http://4.234.181.167:8080/posts/${postId}`, {
+        const response = await fetch(`${API_URL}/posts/${postId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -54,7 +55,7 @@
     const likePost = async () => {
       try {
         const payload = { userID: CurrentUserId, postId };
-        const response = await fetch("http://4.234.181.167:8080/protected/like", {
+        const response = await fetch(`${API_URL}/protected/like`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -77,7 +78,7 @@
   
     const unlikePost = async () => {
       try {
-            const response = await fetch(`http://4.234.181.167:8080/protected/like/${postId}`, {
+            const response = await fetch(`${API_URL}/protected/like/${postId}`, {
             method: "DELETE",
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -108,7 +109,7 @@
     const postComment = async () => {
       try {
         const payload = { userID: CurrentUserId, postId, commentContent };
-        const response = await fetch("http://4.234.181.167:8080/protected/comment", {
+        const response = await fetch(`${API_URL}/protected/comment`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -134,7 +135,7 @@
   
     const deleteComment = async (commentID: string) => {
       try {
-        const response = await fetch(`http://4.234.181.167:8080/protected/comment/${commentID}`, {
+        const response = await fetch(`${API_URL}/protected/comment/${commentID}`, {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -166,7 +167,7 @@
     const followUser = async (followerId: number, followeeId: number) => {
       try {
         const payload = { followerId, followeeId };
-        const response = await fetch("http://4.234.181.167:8080/protected/follow", {
+        const response = await fetch(`${API_URL}/protected/follow`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -189,7 +190,7 @@
   
     const unfollowUser = async (followerId: number, followeeId: number) => {
       try {
-        const response = await fetch("http://4.234.181.167:8080/protected/unfollow", {
+        const response = await fetch(`${API_URL}/protected/unfollow`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -213,7 +214,7 @@
     const fetchFollowStatus = async () => {
       try {
         
-        const response = await fetch(`http://4.234.181.167:8080/protected/isFollowing`, {
+        const response = await fetch(`${API_URL}/protected/isFollowing`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -237,7 +238,7 @@
   
     const fetchUsername = async (user_id: number): Promise<string> => {
       try {
-        const response = await axios.get(`http://4.234.181.167:8080/users/username/${user_id}`);
+        const response = await axios.get(`${API_URL}/users/username/${user_id}`);
         const username = response.data.data;
         return username;
       } catch (error) {
@@ -425,7 +426,7 @@
           <div id="userInfo">
             <Link to={`/${props["user_name"]}`}><span id="username">{props["user_name"]}</span></Link>
             <span>•</span>
-            <span>{props["upload_time"]}</span>
+            <span>{formatRelativeTime(props["upload_time"])}</span>
           </div>
             {#if Number(CurrentUserId) !== Number(followeeId)}
               <div role="button" 

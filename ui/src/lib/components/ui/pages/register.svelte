@@ -3,7 +3,8 @@
   import { Button } from "$lib/components/ui/button";
   import axios from "axios";
   import { navigate } from "svelte-routing";
-  import { usernameExists, emailExists, setUsernameExists, setEmailExists } from "$lib/../store"
+  import { usernameExists, emailExists, setUsernameExists, setEmailExists } from "$lib/../store";
+  import { API_URL } from "../../../../main";
   
   let username = '';
   let password = '';
@@ -13,7 +14,7 @@
 
   const checkUsernameExists = async () => {
   try {
-    const response = await axios.get("http://4.234.181.167:8080/auth/check-username", {
+    const response = await axios.get(`${API_URL}/auth/check-username`, {
       params: { username },
     });
     setUsernameExists(response.data.exists)
@@ -24,7 +25,7 @@
 
 const checkEmailExists = async () => {
   try {
-    const response = await axios.get("http://4.234.181.167:8080/auth/check-email", {
+    const response = await axios.get(`${API_URL}/auth/check-email`, {
       params: { email },
     });
     setEmailExists(response.data.exists);
@@ -40,7 +41,7 @@ const checkEmailExists = async () => {
 
   const Register = async (username, password, firstName, lastName, email) => {
   try {
-    const response = await axios.post("http://4.234.181.167:8080/auth/register", {
+    const response = await axios.post(`${API_URL}/auth/register`, {
       username,
       password,
       firstName,

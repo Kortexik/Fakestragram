@@ -1,5 +1,6 @@
 // userStore.ts
 import { writable } from "svelte/store";
+import { API_URL } from "../../../../main";
 
 export const currentUsername = writable("");
 export const currentUserId = writable("");
@@ -7,7 +8,7 @@ export const currentUserId = writable("");
 
 export const fetchCurrentUser = async () => {
     try {
-        const response = await fetch("http://4.234.181.167:8080/protected/me", {
+        const response = await fetch(`${API_URL}/protected/me`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
             },

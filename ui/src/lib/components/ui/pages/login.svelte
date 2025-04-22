@@ -4,6 +4,7 @@
     import axios from "axios";
     import { navigate } from "svelte-routing";
     import { checkAuthentication } from "$lib/../store";
+    import { API_URL } from "../../../../main";
   
     let username = $state('');
     let password = $state('');
@@ -17,7 +18,7 @@
 
     const Login = async (username, password) => {
     try {
-      const response = await axios.post("http://4.234.181.167:8080/auth/login", {
+      const response = await axios.post(`${API_URL}/auth/login`, {
         username,
         password,
       }, {

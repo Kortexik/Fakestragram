@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-
+import { API_URL } from "./main";
 export const showPopup = writable(false);
 export const isAuthenticated = writable(false);
 
@@ -35,7 +35,7 @@ export async function checkAuthentication() {
 
   if (token) {
     try {
-      const response = await fetch("http://4.234.181.167:8080/protected/home", {
+      const response = await fetch(`${API_URL}/protected/home`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -61,7 +61,7 @@ export async function fetchNotifications() {
 
   if (token) {
     try {
-      const response = await fetch("http://4.234.181.167:8080/protected/notifications", {
+      const response = await fetch(`${API_URL}/protected/notifications`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -83,7 +83,7 @@ export async function markNotificationsAsSeen() {
 
   if (token) {
     try {
-      const response = await fetch("http://4.234.181.167:8080/protected/notifications/mark-seen", {
+      const response = await fetch(`${API_URL}/protected/notifications/mark-seen`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

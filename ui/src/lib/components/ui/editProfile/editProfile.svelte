@@ -5,6 +5,8 @@
     import { editing, setEditing } from "$lib/../store";
     import { currentUserId } from "../pages/userstore";
     import { get } from "svelte/store"
+    import { API_URL } from "../../../../main";
+
     let props = $props();
 
     let avatar = $state(props.avatar);
@@ -35,7 +37,7 @@
 
             const token = localStorage.getItem("token");
             const response = await axios.put(
-                "http://4.234.181.167:8080/protected/update-profile",
+                `${API_URL}/protected/update-profile`,
                 formData,
                 {
                     headers: {

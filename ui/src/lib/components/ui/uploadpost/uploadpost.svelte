@@ -4,6 +4,7 @@
   import Textarea from "../textarea/textarea.svelte";
   import axios from "axios";
   import { createEventDispatcher } from 'svelte';
+  import { API_URL } from "../../../../main";
 
   let popup;
   let selectedFile;
@@ -69,7 +70,7 @@
 
       const token = localStorage.getItem("token");
 
-      const response = await axios.post("http://4.234.181.167:8080/protected/upload", formData, {
+      const response = await axios.post(`${API_URL}/protected/upload`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${token}`
